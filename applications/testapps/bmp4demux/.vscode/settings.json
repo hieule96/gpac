@@ -1,0 +1,7 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "files.associations": {
+        "isomedia.h": "c",
+        "isomedia_dev.h": "c"
+    }
+}

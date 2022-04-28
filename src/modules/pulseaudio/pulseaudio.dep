@@ -1,0 +1,10 @@
+../modules/pulseaudio/pulseaudio.o: ../modules/pulseaudio/pulseaudio.c \
+ /home/ubuntu/Desktop/gpac/include/gpac/modules/audio_out.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/module.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/config_file.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/tools.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/setup.h \
+ /home/ubuntu/Desktop/gpac/config.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/version.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/Remotery.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/constants.h

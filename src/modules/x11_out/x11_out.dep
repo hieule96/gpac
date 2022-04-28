@@ -1,0 +1,19 @@
+../modules/x11_out/x11_out.o: ../modules/x11_out/x11_out.c \
+ ../modules/x11_out/x11_out.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/modules/video_out.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/module.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/config_file.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/tools.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/setup.h \
+ /home/ubuntu/Desktop/gpac/config.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/version.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/Remotery.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/events.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/maths.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/events_constants.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/color.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/constants.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/thread.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/list.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/utf.h \
+ /home/ubuntu/Desktop/gpac/include/gpac/user.h

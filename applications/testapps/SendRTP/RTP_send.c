@@ -1,0 +1,83 @@
+#include "RTP_send.h"
+#include <gpac/ietf.h>
+#include <gpac/internal/ietf_dev.h>
+#include <gpac/internal/media_dev.h>
+#include <gpac/mpeg4_odf.h>
+
+#include "debug.h"
+#include "RTP_packetizer.h"
+
+GF_Err Evaltool_InitRTP(GF_RTPChannel **chan, char *dest, int port, unsigned short mtu_size){
+    GF_Err res;
+	GF_RTSPTransport tr;
+
+	*chan = gf_rtp_new();
+	res = gf_rtp_set_ports(*chan, 0);
+	if (res) {
+		fprintf(stderr, "Cannot set RTP ports: %s\n", gf_error_to_string(res));
+		gf_rtp_del(*chan);
+		return res;
+	}
+
+	tr.destination = dest;
+	tr.IsUnicast = gf_sk_is_multicast_address(dest) ? GF_FALSE : GF_TRUE;
+	tr.Profile= (char *)"RTP/AVP";//RTSP_PROFILE_RTP_AVP;
+	tr.IsRecord = GF_FALSE;
+	tr.Append = GF_TRUE;
+	tr.source = (char *)"0.0.0.0";
+	tr.SSRC=rand();
+
+	tr.port_first		= port;
+	tr.port_last		 = port+1;
+	if (tr.IsUnicast) {
+		tr.client_port_first = port;
+		tr.client_port_last = port+1;
+	} else {
+		tr.source = dest;
+		tr.client_port_first = 0;
+		tr.client_port_last  = 0;
+	}
+
+	res = gf_rtp_setup_transport(*chan, &tr, dest);
+	if (res) {
+		fprintf(stderr, "Cannot setup RTP transport %s\n", gf_error_to_string(res));
+		gf_rtp_del(*chan);
+		return res;
+	}
+
+	res = gf_rtp_initialize(*chan, 0, GF_TRUE, mtu_size, 0, 0, NULL);
+	if (res) {
+		fprintf(stderr, "Cannot initialize RTP transport %s\n", gf_error_to_string(res));
+		gf_rtp_del(*chan);
+		return res;
+	}
+	return GF_OK;
+}
+
+GF_Err Evaltool_sendRTP(RTP_packet *data, u8 *payload, int payloadSize)
+{
+	GF_Err e;
+	unsigned char feedback_buffer[250];
+
+	if (!data->hdr->TimeStamp)
+		data->hdr->TimeStamp = ((RTP_packetExt * )data->extension)->lastTS;
+
+	((RTP_packetExt * )data->extension)->lastTS = data->hdr->TimeStamp;
+
+	e = gf_rtp_send_packet(data->chan, data->hdr, payload, payloadSize, GF_FALSE);
+	dprintf(DEBUG_RTP_serv_sender, "SendPacket : %d, TimeStamp RTP = %d, sz= %d\n",
+	        e, data->hdr->TimeStamp, payloadSize);
+
+	// sending feedback bytes
+	memset(feedback_buffer, 0, sizeof(feedback_buffer));
+	sprintf((char *) feedback_buffer, "DataSent=%d\nRAPsent=%d\n", payloadSize, data->RAPsent);
+	//e = gf_sk_send(data->feedback_socket, feedback_buffer, strlen((char *) feedback_buffer));
+	//dprintf(DEBUG_RTP_serv_packetizer, "Sent feedback data %d byte, return %d\n", payloadSize, e);
+	return e;
+}
+
+GF_Err PNC_CloseRTP(GF_RTPChannel *chan)
+{
+	gf_rtp_del(chan);
+	return GF_OK;
+}

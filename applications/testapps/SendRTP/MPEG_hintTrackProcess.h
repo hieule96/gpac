@@ -1,0 +1,4 @@
+#ifndef _MPEG_HINTTRACKPROCESS_H__
+#define _MPEG_HINTTRACKPROCESS_H__
+
+#endif
